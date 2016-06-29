@@ -11,7 +11,7 @@
 #import <MapKit/MapKit.h>
 #import "HSClusterMarker.h"
 #import "HSDistanceUtil.h"
-#import "HSClusterAlgorithm.h"
+#import "HSZIndexClusterAlgorithm.h"
 
 @interface HSClusterMapView ()
 
@@ -141,20 +141,32 @@
     return unclusteredMarkers;
 }
 
-
 #pragma mark - clustering
 
 -(void)cluster {
-    NSMutableArray *markersToCluster = [self.unclusteredMarkers mutableCopy];
-    NSArray *clusteredMarkers = markersToCluster;
+    NSMutableArray *allUnclusteredMarkers = [self.unclusteredMarkers mutableCopy];
+    NSMutableArray *markersToDisplay = [[NSMutableArray alloc]init];
     if (_clusteringEnabled) {
+        
+        NSMutableArray *markersToCluster = [[NSMutableArray alloc]init];
+        
+        [allUnclusteredMarkers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            if([self isClusterableType:(GMSMarker*)obj]) {
+                [markersToCluster addObject:obj];
+            } else {
+                [markersToDisplay addObject:obj];
+            }
+        }];
+        
         // Calculate clusters
         CLLocationDistance clusterRadius = self.visibleSpan.longitudeDelta * _clusterSize;
-        clusteredMarkers = [HSClusterAlgorithm bubbleClustersFromMarkers:markersToCluster
+        NSLog(@"Cluster Radius %f deg?. %f %f", clusterRadius, self.visibleSpan.longitudeDelta, self.visibleSpan.latitudeDelta);
+        NSArray *clusteredMarkers = [HSZIndexClusterAlgorithm bubbleClustersFromMarkers:markersToCluster
                                                            clusterRadius:clusterRadius];
+        [markersToDisplay addObjectsFromArray:clusteredMarkers];
+    } else {
+        [markersToDisplay addObjectsFromArray:allUnclusteredMarkers];
     }
-    
-    NSMutableArray *markersToDisplay = [clusteredMarkers mutableCopy];
     
     // Check minumum cluster size
     for (NSInteger i = 0; i < markersToDisplay.count; ++i) {
@@ -192,6 +204,14 @@
 
     // Add markers which were not previously visible
     [super addMarkers:markersToDisplay];
+}
+
+-(BOOL)isClusterableType:(GMSMarker*)marker {
+    if(self.zIndexesToCluster) {
+        return [self.zIndexesToCluster containsObject:@(marker.zIndex)];
+    } else {
+        return YES;
+    }
 }
 
 @end
