@@ -13,6 +13,11 @@
 @interface HSClusterMapView : HSMapView
 
 /**
+ * The renderer used for custom HSClusterMarker images
+ */
+@property (strong, nonatomic) id<HSClusterRenderer> renderer;
+
+/**
  * A read-only array of markers which are present on the map, unwrapped from their cluster markers.
  */
 @property (nonatomic, readonly) NSArray *unclusteredMarkers;

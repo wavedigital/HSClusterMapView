@@ -20,11 +20,6 @@
  */
 @property (strong, nonatomic) NSMutableSet *clusterMarkers;
 
-/**
- * The renderer used for custom HSClusterMarker images
- */
-@property (strong, nonatomic) id<HSClusterRenderer> renderer;
-
 @end
 
 
@@ -177,7 +172,7 @@
             }
             else if (self.renderer) {
                 // Render the cluster using the specified renderer
-                clusterMarker.icon = [self.renderer imageForClusterWithCount:clusterMarker.markersInCluster.count];
+                clusterMarker.icon = [self.renderer imageForClusterMarker:clusterMarker];
             }
         }
     }

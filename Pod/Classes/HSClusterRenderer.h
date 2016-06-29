@@ -9,6 +9,8 @@
 #ifndef HotSchedules_HSClusterRenderer_h
 #define HotSchedules_HSClusterRenderer_h
 
+#include "HSClusterMarker.h"
+
 /**
  * Used to render a custom UIImage for each HSClusterMarker.
  * An NSObject implementing this protocol should be passed as an argument to
@@ -18,10 +20,10 @@
 
 /**
  * Generates an image for a HSClusterMarker
- * @param count - the count of markers within the cluster
+ * @param clusterMarker - the marker to return a image for
  * @return an image to use for this HSClusterMarker
  */
--(UIImage *)imageForClusterWithCount:(NSUInteger)count;
+-(UIImage*)imageForClusterMarker:(HSClusterMarker*)clusterMarker;
 
 @end
 
