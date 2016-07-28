@@ -20,7 +20,7 @@
 /**
  * Which markers to actually cluster (nil for all)
  */
-@property (strong, nonatomic) NSSet<NSNumber*> *zIndexesToCluster;
+@property (strong, nonatomic) NSSet *zIndexesToCluster;
 
 /**
  * A read-only array of markers which are present on the map, unwrapped from their cluster markers.
