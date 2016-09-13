@@ -14,6 +14,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Pod/Classes/**/*'
 
   s.frameworks = 'UIKit', 'MapKit', 'GoogleMaps'
-  s.dependency 'GoogleMaps', '~> 1.13.2'
+  s.dependency 'GoogleMaps', '~> 2.0.1'
+  s.compiler_flags = '-fno-modules'
 
 end
